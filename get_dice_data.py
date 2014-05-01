@@ -101,7 +101,7 @@ for ocpt in occupations:
         f.close()
         
         f = open(ocpt + '/' + raw_file + '_post.json', 'w')
-        f.write(json.dumps(jobs))
+        f.write(json.dumps(jobs, indent = 4))
         f.close()
 
 
