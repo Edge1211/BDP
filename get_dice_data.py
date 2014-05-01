@@ -84,7 +84,7 @@ def get_json_from_nyt(title, begin_date, end_date):
     return p.communicate()[0]
 
 
-occupations = ['Nurse']
+occupations = ['']
 for ocpt in occupations:
     #get raw json data
     print '------------------ Getting raw data for ' + ocpt
