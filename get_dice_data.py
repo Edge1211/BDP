@@ -28,6 +28,7 @@ def get_jobs_from_dice(title = '' , skill = '', state = '', output_path = ''):
     jobs_json = json.loads(get_json_from_dice(title, skill, state, 1))
     page_num = jobs_json['count'] / 50
     jobs = []
+    os.mkdir(output_path)
     # print jobs_json['resultItemList']
     for i in range(2, page_num):
         jj = json.loads(get_json_from_dice(title, skill, state, i))
@@ -96,7 +97,7 @@ for ocpt in occupations:
             job['skills'] = extract_jobskill_from_dice(job['detailUrl'])
         f.close()
         
-        f = open(raw_file + '_post.json', 'w')
+        f = open(ocpt + '/' + raw_file + '_post.json', 'w')
         f.write(json.dumps(jobs))
         f.close()
 
