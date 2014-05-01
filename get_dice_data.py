@@ -28,7 +28,9 @@ def get_jobs_from_dice(title = '' , skill = '', state = '', output_path = ''):
     jobs_json = json.loads(get_json_from_dice(title, skill, state, 1))
     page_num = jobs_json['count'] / 50
     jobs = []
-    os.mkdir(output_path)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     # print jobs_json['resultItemList']
     for i in range(2, page_num):
         jj = json.loads(get_json_from_dice(title, skill, state, i))
