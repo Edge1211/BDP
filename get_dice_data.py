@@ -84,11 +84,11 @@ def get_json_from_nyt(title, begin_date, end_date):
     return p.communicate()[0]
 
 
-occupations = ['']
+occupations = ['G']
 for ocpt in occupations:
     #get raw json data
     print '------------------ Getting raw data for ' + ocpt
-    get_jobs_from_dice(text = ocpt, output_path = ocpt)
+    get_jobs_from_dice(text = '', output_path = ocpt)
     
     #get job detail
     print '------------------ Extracting skill data for ' + ocpt
