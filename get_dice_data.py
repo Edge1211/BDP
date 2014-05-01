@@ -10,8 +10,8 @@ import xml.etree.ElementTree as ET
 
 
 #  Get raw json from dice api given parameters 
-def get_json_from_dice(title = '', skill = '', state = '', page = ''):
-    params = {'title': title, 
+def get_json_from_dice(text = '', skill = '', state = '', page = ''):
+    params = {'text': text, 
               'skill': skill,
               'state': state,
               'page': page}
@@ -24,8 +24,8 @@ def get_json_from_dice(title = '', skill = '', state = '', page = ''):
 # Use map reduce to extract job details like(skills needed, degree, job location)
 # number of openings, how long the job has been posted
 
-def get_jobs_from_dice(title = '' , skill = '', state = '', output_path = ''):
-    jobs_json = json.loads(get_json_from_dice(title, skill, state, 1))
+def get_jobs_from_dice(text = '' , skill = '', state = '', output_path = ''):
+    jobs_json = json.loads(get_json_from_dice(text, skill, state, 1))
     page_num = jobs_json['count'] / 50
     jobs = []
     if not os.path.exists(output_path):
@@ -33,7 +33,7 @@ def get_jobs_from_dice(title = '' , skill = '', state = '', output_path = ''):
 
     # print jobs_json['resultItemList']
     for i in range(2, page_num):
-        jj = json.loads(get_json_from_dice(title, skill, state, i))
+        jj = json.loads(get_json_from_dice(text, skill, state, i))
         jobs = jobs + jj['resultItemList']
         factor = 50
         if i / factor > 0 and i % factor == 0:
@@ -87,7 +87,7 @@ occupations = ['Nurse']
 for ocpt in occupations:
     #get raw json data
     print '------------------ Getting raw data for ' + ocpt
-    get_jobs_from_dice(title = ocpt, output_path = ocpt)
+    get_jobs_from_dice(text = ocpt, output_path = ocpt)
     
     #get job detail
     print '------------------ Extracting skill data for ' + ocpt
