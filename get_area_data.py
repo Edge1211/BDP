@@ -93,3 +93,5 @@ def get_area_data_by_zipcode(zipcodes):
 
         zip_datas[zipcode] = zip_data
     return zip_datas
+
+get_area_data_by_state_raw('NY')
