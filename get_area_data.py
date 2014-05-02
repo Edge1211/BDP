@@ -14,7 +14,9 @@ def get_area_data_xml_raw(zipcodes):
     state = zipcodes[0]
 
     for zipcode in zipcodes[1:]:
-        params = {'zws-id': 'X1-ZWz1b7g73ieivf_1zmzq', \
+        zid1 = 'X1-ZWz1b7g73ieivf_1zmzq'
+        zid2 = 'X1-ZWz1dt3t3sdxxn_31kch'
+        params = {'zws-id': zid2, \
                 'zip':zipcode}
         url = urlbase + urllib.urlencode(params)
         print url
@@ -36,7 +38,7 @@ def get_area_data_by_state_raw(state):
     f = open('../' + state + '.txt')
     zipcodes = f.read().split('\n')
 
-    idx = zipcodes.index('12465')
+    idx = zipcodes.index('14750')
     zipcodes = zipcodes[idx+1:]
 
     zipcodes = [state] + zipcodes
