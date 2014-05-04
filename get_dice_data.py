@@ -93,6 +93,7 @@ for ocpt in occupations:
     #get job detail
     print '------------------ Extracting skill data for ' + ocpt
     raw_files = os.listdir(ocpt + '/')
+    raw_files.remove('post')
     post_files = os.listdir(ocpt + '/post')
     for raw_file in raw_files:
         if raw_file + '_post.json' in post_files:
