@@ -93,14 +93,18 @@ for ocpt in occupations:
     #get job detail
     print '------------------ Extracting skill data for ' + ocpt
     raw_files = os.listdir(ocpt + '/')
+    post_files = os.listdir(ocpt + '/post')
     for raw_file in raw_files:
+        if raw_file + '_post.json' in post_files:
+            print '[MSG]' + raw_file + ' already processed.'
+            continue
         f = open(ocpt + '/' + raw_file)
         jobs = json.loads(f.read())
         for job in jobs:
             job['skills'] = extract_jobskill_from_dice(job['detailUrl'])
         f.close()
         
-        f = open(ocpt + '/' + raw_file + '_post.json', 'w')
+        f = open(ocpt + '/post/' + raw_file + '_post.json', 'w')
         f.write(json.dumps(jobs, indent = 4))
         f.close()
 
