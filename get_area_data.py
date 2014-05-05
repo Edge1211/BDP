@@ -5,10 +5,12 @@ import json
 import time
 import re
 import os
+import csv
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
+from data import *
 
-
+# get the xml raw data from Zillow, given a list of zipcodes
 def get_area_data_xml_raw(zipcodes):
     urlbase = 'http://www.zillow.com/webservice/GetDemographics.htm?'
     state = zipcodes[0]
@@ -34,31 +36,28 @@ def get_area_data_xml_raw(zipcodes):
         f.write(result_xml)
         f.close()
 
+# get the xml raw data from Zillow, given a state
 def get_area_data_by_state_raw(state):
-    f = open('../' + state + '.txt')
-    zipcodes = f.read().split('\n')
-
-    idx = zipcodes.index('14750')
-    zipcodes = zipcodes[idx+1:]
+    zipcodes = get_zipcodes_by_state(state)
 
     zipcodes = [state] + zipcodes
-    zipcodes = zipcodes[0:-1]
+    
     get_area_data_xml_raw(zipcodes)
 
+
+# get area data given a state
 def get_area_data_by_state(state):
-    f = open('../' + state + '.txt')
-    zipcodes = f.read().split('\n')
+    
+    zipcodes = get_zipcodes_by_state(state)
 
     zipcodes = [state] + zipcodes
-    zipcodes = zipcodes[0:-1]
-
     data = get_area_data_by_zipcode(zipcodes)
 
     f = open('../stat/' + state, 'w')
     f.write(json.dumps(data, indent = 4))
     f.close()
 
-
+# get area data given a list of zipcodes, parse the xml raw data to get structured data
 def get_area_data_by_zipcode(zipcodes):
     zip_datas = {}
     for zipcode in zipcodes[1:]:
@@ -76,7 +75,7 @@ def get_area_data_by_zipcode(zipcodes):
         zip_data = {}
         zip_data['zipcode'] = zipcode
         zip_data['state'] = root.findall('./response/region/state')[0].text
-        # zip_data['city'] = root.findall('./response/region/city')[0].text
+        
         zip_data['lat'] = root.findall('./response/region/latitude')[0].text
         zip_data['lot'] = root.findall('./response/region/longitude')[0].text
 
@@ -96,4 +95,50 @@ def get_area_data_by_zipcode(zipcodes):
         zip_datas[zipcode] = zip_data
     return zip_datas
 
-get_area_data_by_state_raw('NY')
+# get zip codes by state through zipcode database
+def get_zipcodes_by_state(state):
+    zipcodes = []
+    f = open('zip_code_database.csv')
+    lines = [line for line in f]
+    f.close()
+
+    for line in lines[1:]:
+        ls = line.split(',')
+        if ls[0] == state:
+            zipcodes.append(ls[1])
+    return zipcodes
+
+# get all states in u.s. through zipcode database
+def get_all_states():
+    f = open('zip_code_database.csv')
+    
+    lines = [line for line in f]
+    f.close()
+    states = set()
+    for line in lines[1:]:
+
+        ls = line.split(',')
+        states.add(ls[0])
+    return states
+
+# get data for major metro areas
+def get_metro_area_data():
+    for metro_area in metro_areas:
+        get_area_data_xml_raw(metro_areas)
+
+
+
+
+def main():
+    # get all states and get area data of every zipcode
+    states = get_all_states()
+    for state in states:
+        #get raw data first
+        get_area_data_by_state_raw(state)
+        #parse the raw data and extract useful information
+        get_area_data_by_state(state)
+
+
+if __name__ == '__main__':
+    #main()
+    get_metro_area_data()
