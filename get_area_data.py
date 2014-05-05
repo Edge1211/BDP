@@ -14,6 +14,7 @@ from data import *
 def get_area_data_xml_raw(zipcodes):
     urlbase = 'http://www.zillow.com/webservice/GetDemographics.htm?'
     state = zipcodes[0]
+    print 'Getting raw data for area: ' + state
 
     for zipcode in zipcodes[1:]:
         zid1 = 'X1-ZWz1b7g73ieivf_1zmzq'
@@ -22,6 +23,8 @@ def get_area_data_xml_raw(zipcodes):
                 'zip':zipcode}
         url = urlbase + urllib.urlencode(params)
         print url
+        print 'Getting raw data for zip: ' + str(zipcode)
+
         p = subprocess.Popen(['curl', url], stdout=subprocess.PIPE)
         result_xml = p.communicate()[0]
         root = ET.fromstring(result_xml)
@@ -124,7 +127,7 @@ def get_all_states():
 # get data for major metro areas
 def get_metro_area_data():
     for metro_area in metro_areas:
-        get_area_data_xml_raw(metro_areas)
+        get_area_data_xml_raw(metro_area)
 
 
 
