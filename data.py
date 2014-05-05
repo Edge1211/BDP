@@ -1,4 +1,3 @@
-metro_areas = [seattle_metro_zips, nyc_metro_zips, la_metro_zips, bay_area_zips]
 
 seattle_metro_zips = ['seattle-metro', 98101, 98102, 98103, 98104, 98105, 98106, 98107, \
                     98108, 98109, 98112, 98115, 98116, 98117, 98118, 98119, 98121, \
@@ -106,3 +105,5 @@ la_metro_zips = ['la-metro', 92704, 92804, 90631, 92677, 92627, 92630, 92647, \
             91108, 90210, 91024, 90040, 90755, 93510, 90056, 91020, 90704, 90058, 91343]
 
 chicago_metro_zips = []
+
+metro_areas = [seattle_metro_zips, nyc_metro_zips, la_metro_zips, bay_area_zips]
