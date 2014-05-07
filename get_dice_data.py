@@ -21,9 +21,7 @@ def get_json_from_dice(text = '', skill = '', state = '', page = ''):
     p = subprocess.Popen(['curl', url], stdout=subprocess.PIPE)
     return p.communicate()[0]
 
-# Use map reduce to extract job details like(skills needed, degree, job location)
-# number of openings, how long the job has been posted
-
+# Get formatted data from dice
 def get_jobs_from_dice(text = '' , skill = '', state = '', output_path = ''):
     jobs_json = json.loads(get_json_from_dice(text, skill, state, 1))
     page_num = jobs_json['count'] / 50
@@ -45,7 +43,7 @@ def get_jobs_from_dice(text = '' , skill = '', state = '', output_path = ''):
             jobs = []
         time.sleep(0.5)
     
-
+#parse the detail web page to extract job skills from dice
 def extract_jobskill_from_dice(detail_url):
     p = subprocess.Popen(['curl', detail_url], stdout=subprocess.PIPE)
     result = p.communicate()[0]
@@ -83,32 +81,34 @@ def get_json_from_nyt(title, begin_date, end_date):
     p = subprocess.Popen(['curl', url], stdout=subprocess.PIPE)
     return p.communicate()[0]
 
-
-occupations = ['G']
-for ocpt in occupations:
-    #get raw json data
-    #print '------------------ Getting raw data for ' + ocpt
-    #get_jobs_from_dice(text = '', output_path = ocpt)
-    
-    #get job detail
-    print '------------------ Extracting skill data for ' + ocpt
-    raw_files = os.listdir(ocpt + '/')
-    raw_files.remove('post')
-    post_files = os.listdir(ocpt + '/post')
-    for raw_file in raw_files:
-        if raw_file + '_post.json' in post_files:
-            print '[MSG]' + raw_file + ' already processed.'
-            continue
-        f = open(ocpt + '/' + raw_file)
-        jobs = json.loads(f.read())
-        for job in jobs:
-            job['skills'] = extract_jobskill_from_dice(job['detailUrl'])
-        f.close()
+def main():
+    occupations = ['G']
+    for ocpt in occupations:
+        #get raw json data
+        #print '------------------ Getting raw data for ' + ocpt
+        #get_jobs_from_dice(text = '', output_path = ocpt)
         
-        f = open(ocpt + '/post/' + raw_file + '_post.json', 'w')
-        f.write(json.dumps(jobs, indent = 4))
-        f.close()
+        #get job detail
+        print '------------------ Extracting skill data for ' + ocpt
+        raw_files = os.listdir(ocpt + '/')
+        raw_files.remove('post')
+        post_files = os.listdir(ocpt + '/post')
+        for raw_file in raw_files:
+            if raw_file + '_post.json' in post_files:
+                print '[MSG]' + raw_file + ' already processed.'
+                continue
+            f = open(ocpt + '/' + raw_file)
+            jobs = json.loads(f.read())
+            for job in jobs:
+                job['skills'] = extract_jobskill_from_dice(job['detailUrl'])
+            f.close()
+            
+            f = open(ocpt + '/post/' + raw_file + '_post.json', 'w')
+            f.write(json.dumps(jobs, indent = 4))
+            f.close()
 
+if __main__ == '__main__':
+    main()
 
 # # print get_json_from_nyt("obama", '20130101', '20140409')
 
